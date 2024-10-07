@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c0w7gpkcw4xr6"]
+[gd_scene load_steps=10 format=3 uid="uid://c0w7gpkcw4xr6"]
 
 [ext_resource type="PackedScene" uid="uid://3uqb3tlq72u" path="res://scenes/ground.tscn" id="1_1ut8r"]
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_q5hok"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dcoi6hwb3rjiw" path="res://scenes/parallax_background.tscn" id="3_0m20c"]
 [ext_resource type="PackedScene" uid="uid://cfy6b8u5a52bw" path="res://hud.tscn" id="5_lwonf"]
 [ext_resource type="FontFile" uid="uid://dp2ypv22oqndt" path="res://font/font.ttf" id="6_fs82y"]
+[ext_resource type="AudioStream" uid="uid://dv1qv6v7a773i" path="res://music/bgm.mp3" id="7_qlmfx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dfukd"]
 bg_color = Color(0.439223, 0.612967, 0.821907, 1)
@@ -50,3 +51,7 @@ theme_override_font_sizes/font_size = 65
 theme_override_styles/normal = SubResource("StyleBoxFlat_dfukd")
 theme_override_styles/hover = SubResource("StyleBoxFlat_syhbp")
 text = "RESTART"
+
+[node name="bgMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_qlmfx")
+autoplay = true
