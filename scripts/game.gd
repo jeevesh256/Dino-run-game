@@ -2,6 +2,7 @@ extends Node
 
 var mountain = preload("res://mountain.tscn")
 var barrel = preload("res://barrel.tscn")
+var bird = preload("res://bird.tscn")
 
 const DINO_START_POS := Vector2(224, 488)
 const CAM_START_POS := Vector2(576, 324)
@@ -9,12 +10,14 @@ const OBSTACLE_WIDTH := 320
 const GROUND_WIDTH := 1152  # Width of your ground sprite
 const MAX_CONSECUTIVE_OBSTACLES : int = 1
 const GROUND_Y : int = 498  # The y-coordinate for obstacles to appear on the ground
+const BIRD_Y : int = 400  # The y-coordinate for the bird to appear in the air
 var consecutive_obstacles : int = 0
 var speed : float
 var startSpeed = 5.0
 var screenSize : Vector2
 var gameRunning : bool = false
 var score : int
+var highScore : int = 0
 var obstacles = []  # Array to keep track of spawned obstacles
 
 @onready var dino = $dino
@@ -29,6 +32,7 @@ func _ready():
 	add_child(ground_clone)
 	ground_clone.position.x = ground.position.x + GROUND_WIDTH
 	gameOver.get_node("Button").pressed.connect(_on_button_pressed)
+	load_high_score()
 	new_game()
 
 func new_game():
@@ -45,6 +49,8 @@ func new_game():
 	for obs in obstacles:
 		obs.queue_free()
 	obstacles.clear()
+	# Display the high score on the HUD
+	hud.get_node("highScore").text = "HIGH SCORE: " + str(highScore)
 
 func _process(delta):
 	if gameRunning:
@@ -53,7 +59,7 @@ func _process(delta):
 		camera_2d.position.x += speed
 		
 		score += speed
-		hud.get_node("score").text = "SCORE: " + str(score / 10)
+		hud.get_node("score").text = "SCORE: " + str(score / 20)
 		
 		# Random chance to spawn an obstacle
 		if randi() % 100 < 1:
@@ -91,16 +97,21 @@ func spawn_obstacle():
 		consecutive_obstacles = 0
 		return
 
-	var random_num = randi() % 2
+	var random_num = randi() % 3  # 0: mountain, 1: barrel, 2: bird
 	var instance
+	var spawn_y = GROUND_Y  # Default Y-coordinate for ground obstacles
 
 	if random_num == 0:
 		instance = mountain.instantiate()
-	else:
+	elif random_num == 1:
 		instance = barrel.instantiate()
+	else:
+		instance = bird.instantiate()  # Create a new bird instance
+		spawn_y = BIRD_Y  # Set Y-coordinate for bird to fly higher
 
+	# Randomize the spawn position ahead of the camera
 	var spawn_x = camera_2d.position.x + screenSize.x + randi() % 200
-	instance.position = Vector2(spawn_x, GROUND_Y)
+	instance.position = Vector2(spawn_x, spawn_y)
 
 	add_child(instance)
 	obstacles.append(instance)
@@ -112,9 +123,30 @@ func game_over():
 	hud.get_node("gameOver").show()
 	gameOver.show()
 	get_tree().paused = true
+	
+	# Check if current score is higher than the high score
+	if score/20 > highScore:
+		highScore = score/20
+		save_high_score()
 
 func _on_button_pressed():
 	_restart_game()
 
 func _restart_game():
 	get_tree().reload_current_scene()  # Reload the current scene to reset the game
+
+# Save the high score to a file
+func save_high_score():
+	var file = FileAccess.open("user://high_score.save", FileAccess.WRITE)
+	if file:
+		file.store_var(highScore)
+		file.close()
+
+# Load the high score from the file
+func load_high_score():
+	var file = FileAccess.open("user://high_score.save", FileAccess.READ)
+	if file:
+		highScore = file.get_var()
+		file.close()
+	else:
+		highScore = 0

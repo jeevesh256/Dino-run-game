@@ -1,10 +1,10 @@
 [gd_scene load_steps=9 format=3 uid="uid://c0w7gpkcw4xr6"]
 
-[ext_resource type="PackedScene" uid="uid://3uqb3tlq72u" path="res://ground.tscn" id="1_1ut8r"]
+[ext_resource type="PackedScene" uid="uid://3uqb3tlq72u" path="res://scenes/ground.tscn" id="1_1ut8r"]
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_q5hok"]
-[ext_resource type="PackedScene" uid="uid://5lo4m5v8lti5" path="res://dino.tscn" id="2_tblkc"]
-[ext_resource type="PackedScene" uid="uid://dcoi6hwb3rjiw" path="res://parallax_background.tscn" id="3_0m20c"]
-[ext_resource type="PackedScene" uid="uid://c2t2qwy68dxfd" path="res://hud.tscn" id="5_7bi3e"]
+[ext_resource type="PackedScene" uid="uid://5lo4m5v8lti5" path="res://scenes/dino.tscn" id="2_tblkc"]
+[ext_resource type="PackedScene" uid="uid://dcoi6hwb3rjiw" path="res://scenes/parallax_background.tscn" id="3_0m20c"]
+[ext_resource type="PackedScene" uid="uid://cfy6b8u5a52bw" path="res://hud.tscn" id="5_lwonf"]
 [ext_resource type="FontFile" uid="uid://dp2ypv22oqndt" path="res://font/font.ttf" id="6_fs82y"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dfukd"]
@@ -28,7 +28,7 @@ position = Vector2(224, 488)
 
 [node name="ParallaxBackground" parent="." instance=ExtResource("3_0m20c")]
 
-[node name="HUD" parent="." instance=ExtResource("5_7bi3e")]
+[node name="HUD" parent="." instance=ExtResource("5_lwonf")]
 
 [node name="gameOver" type="CanvasLayer" parent="."]
 process_mode = 2
