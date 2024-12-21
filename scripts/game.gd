@@ -11,12 +11,13 @@ const GROUND_WIDTH := 1152
 const MAX_CONSECUTIVE_OBSTACLES: int = 1
 const GROUND_Y: int = 498
 const BIRD_Y: int = 400
+const MIN_OBSTACLE_DISTANCE := 400  # Minimum distance between consecutive obstacles
 
 var consecutive_obstacles: int = 0
 var speed: float
 var startSpeed = 5.0
-var maxSpeed = 8.0  # Define a maximum speed
-var speedIncreaseRate = 0.1  # Rate at which the speed increases
+var maxSpeed = 25.0  # Define a maximum speed
+var speedIncreaseRate = 0.02  # Rate at which the speed increases
 var screenSize: Vector2
 var gameRunning: bool = false
 var score: int
@@ -123,6 +124,13 @@ func spawn_obstacle():
 		spawn_y = BIRD_Y
 
 	var spawn_x = camera_2d.position.x + screenSize.x + randi() % 200
+
+	# Ensure the new obstacle is not too close to the last one
+	if obstacles.size() > 0:
+		var last_obstacle = obstacles[obstacles.size() - 1]
+		if spawn_x - last_obstacle.position.x < MIN_OBSTACLE_DISTANCE:
+			spawn_x = last_obstacle.position.x + MIN_OBSTACLE_DISTANCE
+
 	instance.position = Vector2(spawn_x, spawn_y)
 
 	add_child(instance)
