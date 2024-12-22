@@ -11,6 +11,7 @@ const GROUND_WIDTH := 1152
 const MAX_CONSECUTIVE_OBSTACLES: int = 1
 const GROUND_Y: int = 498
 const BIRD_Y: int = 400
+const MIN_OBSTACLE_DISTANCE: float = 400.0  # Minimum distance between obstacles
 
 var consecutive_obstacles: int = 0
 var speed: float
@@ -21,6 +22,7 @@ var screenSize: Vector2
 var gameRunning: bool = false
 var score: int
 var obstacles = []
+var last_obstacle_x: float = 0.0
 
 @onready var dino = $dino
 @onready var camera_2d = $Camera2D
@@ -122,12 +124,13 @@ func spawn_obstacle():
 		instance = bird.instantiate()
 		spawn_y = BIRD_Y
 
-	var spawn_x = camera_2d.position.x + screenSize.x + randi() % 200
+	var spawn_x = max(camera_2d.position.x + screenSize.x + randi() % 200, last_obstacle_x + MIN_OBSTACLE_DISTANCE)
 	instance.position = Vector2(spawn_x, spawn_y)
 
 	add_child(instance)
 	obstacles.append(instance)
 
+	last_obstacle_x = spawn_x
 	consecutive_obstacles += 1
 
 func game_over():
